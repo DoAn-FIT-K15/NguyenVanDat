@@ -29,12 +29,6 @@ public class User {
     private String email;
 
     @Column
-    private LocalDateTime otpGeneratedTime;
-
-    @Column
-    private String otp;
-
-    @Column
     private String firstName;
 
     @Column
