@@ -223,7 +223,7 @@ public class UserServiceImpl implements UserService {
                 long defaultRoleId = 2;
                 Role role = roleRepository.findById(defaultRoleId);
                 user.getRoles().add(role);
-
+                user.setFullName(registerRequest.getFullName());
                 // Lưu thông tin tài khoản mới
                 User newUser = userRepository.save(user);
                 return userMapper.mapModelToResponse(newUser);
