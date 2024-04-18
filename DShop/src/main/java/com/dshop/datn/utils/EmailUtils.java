@@ -54,7 +54,7 @@ public class EmailUtils {
     public void sendPassword(String email, String password) throws MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-        mimeMessageHelper.setFrom("datnguyen2xtb@gmail.com");
+
         mimeMessageHelper.setTo(email);
         mimeMessageHelper.setSubject("Thay Đổi Mật Khẩu");
         mimeMessageHelper.setText("""
