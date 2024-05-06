@@ -29,9 +29,9 @@ const Address = () => {
     try {
       const res = await provinceApi.cityApi();
       if (res.status === 200) {
-        const newCity = res.data.results.map((city) => ({
+        const newCity = res.data.map((city) => ({
           code: city.province_id,
-          name: city.rovince_name,
+          name: city.province_name,
         }));
         newCity.forEach((city) => {
           setCityMap((prevMapping) => ({

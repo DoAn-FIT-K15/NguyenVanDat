@@ -122,7 +122,7 @@ const Profile = () => {
       const res = await provinceApi.cityApi();
 
       if (res.status === 200) {
-        setCities(res.data);
+        setCities(res.data.results);
       }
     } catch (error) {
       console.error(error);
@@ -133,7 +133,7 @@ const Profile = () => {
       try {
         const res = await provinceApi.districtApi(user?.addresses[0].province);
         if (res.status === 200) {
-          setDistricts(res.data.districts);
+          setDistricts(res.data.results);
         }
       } catch (error) {
         console.error(error);
@@ -146,7 +146,7 @@ const Profile = () => {
         const res = await provinceApi.wardApi(user?.addresses[0].district);
 
         if (res.status === 200) {
-          setWards(res.data.wards);
+          setWards(res.data.results);
         }
       } catch (error) {
         console.error(error);
@@ -186,7 +186,7 @@ const Profile = () => {
                 <div className="col-12 wrap_inforAccount" id="customer_sidebar">
                   <p className="title-detail">Thông tin tài khoản</p>
                   <h2 className="name_account">
-                    {user?.lastName} {user?.firstName}
+                    {user?.fullName} 
                   </h2>
                   <p className="email ">{user?.email}</p>
                   <div className="address ">

@@ -22,7 +22,7 @@ public class BannerRest {
      * get banner at home page
      */
     @GetMapping("")
-    public ResponseEntity<?> getBanners(@RequestParam(name = "q", defaultValue = "3") int number){
+    public ResponseEntity<?> getBanners(@RequestParam(name = "q", defaultValue = "5") int number){
         try{
             List<BannerResponse> bannerResponses = bannerService.getNumberOfBanners(number);
             if (bannerResponses == null) {

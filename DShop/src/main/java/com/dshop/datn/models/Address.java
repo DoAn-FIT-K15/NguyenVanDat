@@ -25,10 +25,7 @@ public class Address {
     private long id;
 
     @Column
-    private String firstName;
-
-    @Column
-    private String lastName;
+    private String fullName;
 
     @Column
     private String phone;

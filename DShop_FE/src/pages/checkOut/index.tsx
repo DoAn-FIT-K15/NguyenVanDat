@@ -50,7 +50,7 @@ const CheckOut = () => {
       const res = await provinceApi.cityApi();
 
       if (res.status === 200) {
-        setCities(res.data);
+        setCities(res?.data.results);
       }
     } catch (error) {
       console.error(error);
@@ -60,7 +60,7 @@ const CheckOut = () => {
     try {
       const res = await provinceApi.districtApi(cityId);
       if (res.status === 200) {
-        setDistricts(res.data.districts);
+        setDistricts(res?.data.results);
       }
     } catch (error) {
       console.error(error);
@@ -71,7 +71,7 @@ const CheckOut = () => {
       const res = await provinceApi.wardApi(districtId);
 
       if (res.status === 200) {
-        setWards(res.data.wards);
+        setWards(res?.data.results);
       }
     } catch (error) {
       console.error(error);
@@ -319,7 +319,7 @@ const CheckOut = () => {
     const itemss = e.target.value;
     const item: Address | undefined = addresses.find((address) => address.id === parseInt(itemss));
     if (item) {
-      setFullName(`${item.lastName} ${item.firstName}`);
+      setFullName(item.fullName);
       setPhone(item.phone);
       setAddress(item.addressDetail);
       setCityId(item.province);
@@ -752,6 +752,7 @@ const CheckOut = () => {
                                 !!addresses.length &&
                                 addresses.map((item, i) => (
                                   <option value={item.id} key={i}>
+                                    {item.fullName},
                                     {item.phone}, {item.addressDetail}, {wardMap[item.wards]},{' '}
                                     {districtMap[item.district]}, {cityMap[item.province]}
                                   </option>
@@ -814,8 +815,8 @@ const CheckOut = () => {
                                     {!!cities &&
                                       !!cities.length &&
                                       cities.map((city) => (
-                                        <option key={city.code} value={city.code}>
-                                          {city.name}
+                                        <option key={city.province_id} value={city.province_id}>
+                                          {city.province_name}
                                         </option>
                                       ))}
                                   </select>
@@ -837,8 +838,8 @@ const CheckOut = () => {
                                     {!!districts &&
                                       !!districts.length &&
                                       districts.map((district) => (
-                                        <option key={district.code} value={district.code}>
-                                          {district.name}
+                                        <option key={district.district_id} value={district.district_id}>
+                                          {district.district_name}
                                         </option>
                                       ))}
                                   </select>
@@ -860,8 +861,8 @@ const CheckOut = () => {
                                     {!!wards &&
                                       !!wards.length &&
                                       wards.map((ward) => (
-                                        <option key={ward.code} value={ward.code}>
-                                          {ward.name}
+                                        <option key={ward.ward_id} value={ward.ward_id}>
+                                          {ward.ward_name}
                                         </option>
                                       ))}
                                   </select>

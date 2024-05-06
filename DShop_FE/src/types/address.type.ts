@@ -2,10 +2,9 @@ export interface Address {
   addressDetail: string;
   createdDate: string;
   district: string;
-  firstName: string;
+  fullName: string;
   focus: number;
   id: number;
-  lastName: string;
   modifiedDate: string;
   phone: string;
   province: string;

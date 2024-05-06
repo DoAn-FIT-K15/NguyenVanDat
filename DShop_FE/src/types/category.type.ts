@@ -19,24 +19,3 @@ export interface Banner {
   name: string;
   src: string;
 }
-
-// const bb = {
-//   categoryId
-// : 
-// 1
-// createdDate
-// : 
-// "10:47:31 24-08-2023"
-// id
-// : 
-// 3
-// modifiedDate
-// : 
-// "10:48:54 24-08-2023"
-// name
-// : 
-// "Banner sản phẩm"
-// src
-// : 
-// "slide_home_1.jpg"
-// }

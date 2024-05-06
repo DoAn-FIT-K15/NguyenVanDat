@@ -30,8 +30,7 @@ const Input = ({ placeholder, value, onChange }: IInput) => {
 const ViewEdit = ({ onCancel, mode, setIsAction, addressId, getAddress, addressData }) => {
   const user: User = useSelector((state: RootState) => state.AuthReducer.user);
   const isAddNew = mode === 'add';
-  const [firstName, setFirstName] = React.useState('');
-  const [lastName, setLastName] = React.useState('');
+  const [fullName, setFullName] = React.useState('');
   const [address, setAddress] = React.useState('');
   const [phone, setPhone] = React.useState('');
   const [cities, setCities] = React.useState<City[]>([]);
@@ -43,9 +42,8 @@ const ViewEdit = ({ onCancel, mode, setIsAction, addressId, getAddress, addressD
   const getCities = async () => {
     try {
       const res = await provinceApi.cityApi();
-
       if (res.status === 200) {
-        setCities(res.data);
+        setCities(res?.data.results);
       }
     } catch (error) {
       console.error(error);
@@ -55,7 +53,7 @@ const ViewEdit = ({ onCancel, mode, setIsAction, addressId, getAddress, addressD
     try {
       const res = await provinceApi.districtApi(cityId);
       if (res.status === 200) {
-        setDistricts(res.data.districts);
+        setDistricts(res?.data.results);
       }
     } catch (error) {
       console.error(error);
@@ -66,7 +64,7 @@ const ViewEdit = ({ onCancel, mode, setIsAction, addressId, getAddress, addressD
       const res = await provinceApi.wardApi(districtId);
 
       if (res.status === 200) {
-        setWards(res.data.wards);
+        setWards(res?.data.results);
       }
     } catch (error) {
       console.error(error);
@@ -123,15 +121,7 @@ const ViewEdit = ({ onCancel, mode, setIsAction, addressId, getAddress, addressD
   const handleCreateAddress = async () => {
     try {
       const phoneNumberRegex = /^0[0-9]{9}$/;
-      if (!lastName) {
-        toast.error(`Vui lòng nhập họ`, {
-          position: 'top-right',
-          pauseOnHover: false,
-          theme: 'dark',
-        });
-        return;
-      }
-      if (!firstName) {
+      if (!fullName) {
         toast.error(`Vui lòng nhập tên`, {
           position: 'top-right',
           pauseOnHover: false,
@@ -189,8 +179,7 @@ const ViewEdit = ({ onCancel, mode, setIsAction, addressId, getAddress, addressD
         return;
       }
       const data = {
-        firstName: firstName,
-        lastName: lastName,
+        fullName: fullName,
         phone: phone,
         addressDetail: address,
         province: cityId,
@@ -221,15 +210,7 @@ const ViewEdit = ({ onCancel, mode, setIsAction, addressId, getAddress, addressD
   const handleUpdateAddress = async () => {
     try {
       const phoneNumberRegex = /^0[0-9]{9}$/;
-      if (!lastName) {
-        toast.error(`Vui lòng nhập họ`, {
-          position: 'top-right',
-          pauseOnHover: false,
-          theme: 'dark',
-        });
-        return;
-      }
-      if (!firstName) {
+      if (!fullName) {
         toast.error(`Vui lòng nhập tên`, {
           position: 'top-right',
           pauseOnHover: false,
@@ -287,8 +268,7 @@ const ViewEdit = ({ onCancel, mode, setIsAction, addressId, getAddress, addressD
         return;
       }
       const data = {
-        firstName: firstName,
-        lastName: lastName,
+        fullName: fullName,
         phone: phone,
         addressDetail: address,
         province: cityId,
@@ -327,8 +307,7 @@ const ViewEdit = ({ onCancel, mode, setIsAction, addressId, getAddress, addressD
     if (addressId) {
       const selectedAddress: Address = addressData.find((item) => item.id === addressId);
       if (selectedAddress) {
-        setFirstName(selectedAddress.firstName);
-        setLastName(selectedAddress.lastName);
+        setFullName(selectedAddress.fullName);
         setPhone(selectedAddress.phone);
         setAddress(selectedAddress.addressDetail);
         setCityId(selectedAddress.province);
@@ -339,8 +318,7 @@ const ViewEdit = ({ onCancel, mode, setIsAction, addressId, getAddress, addressD
   }, [addressId, addressData]);
   return (
     <div className={`customer_address ${isAddNew && 'add_address add_address_table'}`}>
-      <Input placeholder="Họ" value={lastName} onChange={(e) => setLastName(e.target.value)} />
-      <Input placeholder="Tên" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+      <Input placeholder="Họ và tên" value={fullName} onChange={(e) => setFullName(e.target.value)} />
       <Input placeholder="Số điện thoại" value={phone} onChange={(e) => setPhone(e.target.value)} />
       <Input placeholder="Địa chỉ" value={address} onChange={(e) => setAddress(e.target.value)} />
       <div className="input-group">
@@ -349,8 +327,8 @@ const ViewEdit = ({ onCancel, mode, setIsAction, addressId, getAddress, addressD
           {!!cities &&
             !!cities.length &&
             cities.map((city) => (
-              <option key={city.code} value={city.code}>
-                {city.name}
+              <option key={city.province_id} value={city.province_id}>
+                {city.province_name}
               </option>
             ))}
         </select>
@@ -361,8 +339,8 @@ const ViewEdit = ({ onCancel, mode, setIsAction, addressId, getAddress, addressD
           {!!districts &&
             !!districts.length &&
             districts.map((district) => (
-              <option key={district.code} value={district.code}>
-                {district.name}
+              <option key={district.district_id} value={district.district_id}>
+                {district.district_name}
               </option>
             ))}
         </select>
@@ -373,8 +351,8 @@ const ViewEdit = ({ onCancel, mode, setIsAction, addressId, getAddress, addressD
           {!!wards &&
             !!wards.length &&
             wards.map((ward) => (
-              <option key={ward.code} value={ward.code}>
-                {ward.name}
+              <option key={ward.ward_id} value={ward.ward_id}>
+                {ward.ward_name}
               </option>
             ))}
         </select>
