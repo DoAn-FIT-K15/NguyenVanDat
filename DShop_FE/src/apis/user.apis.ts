@@ -9,6 +9,6 @@ const userApi = {
   deleteAddress : (id) => httpRequest.delete<SuccessResponse<Address>, any>(`/api/user/address/delete/${id}`),
   updateAddress : (id, data) => httpRequest.put<SuccessResponse<Address>, any>(`/api/user/address/update/${id}`, data),
   getUser : (id) => httpRequest.get<SuccessResponse<User>, any>(`/api/user/${id}`),
-
+  changePassword:(id, data) => httpRequest.put<SuccessResponse<User>, any>(`/api/user/changePassword/${id}`, data),
 }
 export default userApi;

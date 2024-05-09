@@ -64,7 +64,7 @@ const DetailOrder = () => {
       const res = await provinceApi.cityApi();
 
       if (res.status === 200) {
-        setCities(res.data);
+        setCities(res.data.results);
       }
     } catch (error) {
       console.error(error);
@@ -74,7 +74,7 @@ const DetailOrder = () => {
     try {
       const res = await provinceApi.districtApi(order?.province);
       if (res.status === 200) {
-        setDistricts(res.data.districts);
+        setDistricts(res.data.results);
       }
     } catch (error) {
       console.error(error);
@@ -85,7 +85,7 @@ const DetailOrder = () => {
       const res = await provinceApi.wardApi(order?.district);
 
       if (res.status === 200) {
-        setWards(res.data.wards);
+        setWards(res.data.results);
       }
     } catch (error) {
       console.error(error);
@@ -104,9 +104,9 @@ const DetailOrder = () => {
       getWards();
     }
   }, [order]);
-  const cityName = cities.find((city) => city.code === parseInt(order?.province || ''));
-  const districtName = districts.find((district) => district.code === parseInt(order?.district || ''));
-  const wardName = wards.find((ward) => ward.code === parseInt(order?.wards || ''));
+  const cityName = cities.find((city) => city.province_id === (order?.province || ''));
+  const districtName = districts.find((district) => district.district_id === (order?.district || ''));
+  const wardName = wards.find((ward) => ward.ward_id === (order?.wards || ''));
   return (
     <div className="layout-account">
       <div className="container">
@@ -236,20 +236,21 @@ const DetailOrder = () => {
                       <div id="order_payment" className="col-lg-6 col-6 order-payment">
                         <h3 className="order_section_title">Địa chỉ nhận hàng</h3>
                         <div className="alert alert-info">
-                          <span className="text_status">Tình trạng thanh toán:</span>{' '}
+                          <span className="text_status">Tình trạng thanh toán:&nbsp;</span>{' '}
                           <span className="status_pending">
                             {order?.isCheckout ? 'Đã thanh toán' : 'Chưa thanh toán'}
                           </span>
                         </div>
                         <div className="box-address">
-                          <p className="adressName ">{order?.fullName}</p>
+                          <p className="adressName ">Người nhận: {order?.fullName}</p>
                           <p />
+                          <strong>Địa chỉ:</strong>
                           <p>{order?.addressDetail}</p>
                           <p />
-                          <p> {wardName?.name}</p>
-                          <p>{districtName?.name}</p>
-                          <p>{cityName?.name}</p>
-                          <p>{order?.phone}</p>
+                          <p> {wardName?.ward_name}</p>
+                          <p>{districtName?.district_name}</p>
+                          <p>{cityName?.province_name}</p>
+                          <p><strong>Số điện thoại: </strong>{order?.phone}</p>
                         </div>
                       </div>
                       {/* <div id="order_shipping" className="col-lg-6 col-6 order-shipping">

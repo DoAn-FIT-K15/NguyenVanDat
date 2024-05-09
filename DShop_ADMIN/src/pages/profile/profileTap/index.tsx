@@ -50,7 +50,7 @@ const ProfileTap = () => {
       const res = await provinceApi.cityApi();
 
       if (res.status === 200) {
-        setCities(res.data);
+        setCities(res.data.results);
       }
     } catch (error) {
       console.error(error);
@@ -61,7 +61,7 @@ const ProfileTap = () => {
       try {
         const res = await provinceApi.districtApi(user?.addresses[0].province);
         if (res.status === 200) {
-          setDistricts(res.data.districts);
+          setDistricts(res.data.results);
         }
       } catch (error) {
         console.error(error);
@@ -74,7 +74,7 @@ const ProfileTap = () => {
         const res = await provinceApi.wardApi(user?.addresses[0].district);
 
         if (res.status === 200) {
-          setWards(res.data.wards);
+          setWards(res.data.results);
         }
       } catch (error) {
         console.error(error);
@@ -96,10 +96,11 @@ const ProfileTap = () => {
   }, [user]);
   let cityName, districtName, wardName;
   if (user && user.addresses && user.addresses.length > 0) {
-    cityName = cities.find((city) => city.code === parseInt(user?.addresses[0].province || ''));
-    districtName = districts.find((district) => district.code === parseInt(user?.addresses[0].district || ''));
-    wardName = wards.find((ward) => ward.code === parseInt(user?.addresses[0].wards || ''));
+    cityName = cities.find((city) => city.province_id === (user?.addresses[0].province || ''));
+    districtName = districts.find((district) => district.district_id === (user?.addresses[0].district || ''));
+    wardName = wards.find((ward) => ward.ward_id === (user?.addresses[0].wards || ''));
   }
+
   return (
     <div className="max-w-5xl mx-auto shadow-md border rounded-lg">
       <div className="flex items-center justify-center pt-3">
@@ -113,12 +114,8 @@ const ProfileTap = () => {
         <div className="flex items-center justify-around mt-3">
           <div className="w-[30%] text-base text-black font-bold">Họ và Tên :</div>
           <div className="w-[70%] flex items-center justify-between">
-            {user?.lastName} {user?.firstName}
+            {user?.fullName} 
           </div>
-        </div>
-        <div className="flex items-center justify-around mt-3">
-          <div className="w-[30%] text-base text-black font-bold">Email : </div>
-          <div className="w-[70%] flex items-center">{user?.email}</div>
         </div>
         <div className="flex items-center justify-around mt-3">
           <div className="w-[30%] text-base text-black font-bold">Số điện thoại</div>
@@ -130,7 +127,7 @@ const ProfileTap = () => {
             {' '}
             {user?.addresses && user.addresses.length > 0 ? (
               <>
-                {user?.addresses[0].addressDetail}, {wardName?.name}, {districtName?.name}, {cityName?.name}
+                {user?.addresses[0].addressDetail}, {wardName?.ward_name}, {districtName?.district_name}, {cityName?.province_name}
               </>
             ) : (
               <>Chưa có địa chỉ</>

@@ -1,16 +1,17 @@
 .sidebar {
   min-width: var(--sidebar-width);
-  height: 100vh;
+  height: 110vh;
   /* overflow-y: scroll; */
   position: fixed;
   left: 0;
   top: 0;
   background-color: var(--main-bg);
   box-shadow: var(--box-shadow);
+  /* margin-top: -10px; */
 }
 
 .sidebar__logo {
-  height: 120px;
+  height: 100px;
   display: flex;
   align-items: center;
   justify-content: center;

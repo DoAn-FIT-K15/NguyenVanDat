@@ -13,8 +13,8 @@ const Topbar = () => {
             <div className='location col-4 d-flex align-items-center' style={{color: 'white'}}>
               <svg fill='white' width="30" height="30" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></svg>
               <div className="location-name d-flex flex-column ms-3 " style={{fontSize: '16px'}}>
-                <span>HN:</span>
-                <span>HCM:</span>
+                <span>HN: Số 19, nghách 103/80 Xuân Phương, phường Phương Canh, quận Nam Từ Liêm, Tp.Hà Nội</span>
+                
               </div>
             </div>
             <div className="wrap-logo col-4 text-center" onClick={() => navigate('/')}>

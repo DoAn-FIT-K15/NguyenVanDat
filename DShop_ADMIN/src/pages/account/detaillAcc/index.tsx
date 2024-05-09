@@ -57,7 +57,7 @@ const DetailAcc = () => {
       const res = await provinceApi.cityApi();
 
       if (res.status === 200) {
-        setCities(res.data);
+        setCities(res.data.results);
       }
     } catch (error) {
       console.error(error);
@@ -68,7 +68,7 @@ const DetailAcc = () => {
       try {
         const res = await provinceApi.districtApi(addresses[0]?.province);
         if (res.status === 200) {
-          setDistricts(res.data.districts);
+          setDistricts(res.data.results);
         }
       } catch (error) {
         console.error(error);
@@ -81,7 +81,7 @@ const DetailAcc = () => {
         const res = await provinceApi.wardApi(addresses[0]?.district);
 
         if (res.status === 200) {
-          setWards(res.data.wards);
+          setWards(res.data.results);
         }
       } catch (error) {
         console.error(error);
@@ -103,10 +103,12 @@ const DetailAcc = () => {
   }, [addresses]);
   let cityName, districtName, wardName;
   if (user && user.addresses && user.addresses.length > 0) {
-    cityName = cities.find((city) => city.code === parseInt(addresses[0].province || ''));
-    districtName = districts.find((district) => district.code === parseInt(addresses[0].district || ''));
-    wardName = wards.find((ward) => ward.code === parseInt(addresses[0].wards || ''));
+    cityName = cities.find((city) => city.province_id === (addresses[0].province || ''));
+    districtName = districts.find((district) => district.district_id === (addresses[0].district || ''));
+    wardName = wards.find((ward) => ward.ward_id === (addresses[0].wards || ''));
   }
+
+  console.log("user:", user)
   return (
     <div className="max-w-5xl mx-auto shadow-md border rounded-lg">
       <div className="flex items-center justify-center pt-3">
@@ -120,7 +122,7 @@ const DetailAcc = () => {
         <div className="flex items-center justify-around mt-3">
           <div className="w-[30%] text-base text-black font-bold">Họ và tên : </div>
           <div className="w-[70%] relative flex items-center justify-between">
-            {user?.lastName} {user?.firstName}
+            {user?.fullName}
           </div>
         </div>
         <div className="flex items-center justify-around mt-3">
@@ -136,7 +138,7 @@ const DetailAcc = () => {
           <div className="w-[70%] relative flex items-center">
             {user?.addresses && user.addresses.length > 0 ? (
               <>
-                {addresses[0]?.addressDetail}, {wardName?.name}, {districtName?.name}, {cityName?.name}
+                {addresses[0]?.addressDetail}, {wardName?.ward_name}, {districtName?.district_name}, {cityName?.province_name}
               </>
             ) : (
               <>Chưa có địa chỉ</>

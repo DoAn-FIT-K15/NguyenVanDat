@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const provinceRequest = axios.create({
-    baseURL: 'https://provinces.open-api.vn/',
+    baseURL: 'https://vapi.vnappmob.com',
     headers: {
         'content-type': 'application/json',
     },

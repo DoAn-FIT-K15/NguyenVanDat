@@ -224,6 +224,8 @@ public class UserServiceImpl implements UserService {
                 Role role = roleRepository.findById(defaultRoleId);
                 user.getRoles().add(role);
                 user.setFullName(registerRequest.getFullName());
+                user.setPhone(registerRequest.getPhone());
+                user.setEmail(registerRequest.getEmail());
                 // Lưu thông tin tài khoản mới
                 User newUser = userRepository.save(user);
                 return userMapper.mapModelToResponse(newUser);
@@ -274,22 +276,25 @@ public class UserServiceImpl implements UserService {
     @Override
     public String changePassword(Long userId, PasswordRequest passwordRequest) {
         User user = userRepository.findById(userId).orElseThrow();
-        //Kiểm tra thông tin của passrequest có hợp lệ hay không
+
+        // Kiểm tra mật khẩu cũ trước
+        if (!passwordEncoder().matches(passwordRequest.getOldPassword(), user.getPassword())) {
+            return "Mật khẩu cũ không đúng";
+        }
+
+        // Kiểm tra thông tin của passwordRequest có hợp lệ hay không
         if (passwordRequest.getNewPassword() != null && passwordRequest.getCfNewPassword() != null) {
-            //kiểm tra 2 pass có trùng nhau không
+            // Kiểm tra 2 mật khẩu mới có trùng nhau không
             if (Objects.equals(passwordRequest.getNewPassword(), passwordRequest.getCfNewPassword())) {
-                if (passwordEncoder().matches(passwordRequest.getOldPassword(), user.getPassword())) {
-                    if (!passwordEncoder().matches(passwordRequest.getNewPassword(), user.getPassword())) {
-                        //cập nhật pass mới
-                        user.setPassword(passwordEncoder().encode(passwordRequest.getNewPassword()));
-                        //lưu và trả về kết quả
-                        userRepository.save(user);
-                        return "Thay đổi mật khẩu thành công";
-                    } else {
-                        return "Mật khẩu mới phải khác mật khẩu cũ";
-                    }
+                // Kiểm tra mật khẩu mới có khác mật khẩu cũ không
+                if (!passwordEncoder().matches(passwordRequest.getNewPassword(), user.getPassword())) {
+                    // Cập nhật mật khẩu mới
+                    user.setPassword(passwordEncoder().encode(passwordRequest.getNewPassword()));
+                    // Lưu và trả về kết quả
+                    userRepository.save(user);
+                    return "Thay đổi mật khẩu thành công";
                 } else {
-                    return "Mật khẩu cũ không đúng";
+                    return "Mật khẩu mới phải khác mật khẩu cũ";
                 }
             } else {
                 return "Mật khẩu xác nhận không chính xác";
@@ -298,6 +303,7 @@ public class UserServiceImpl implements UserService {
             return null;
         }
     }
+
 
     @Override
     public String forgotPassword(String username) {

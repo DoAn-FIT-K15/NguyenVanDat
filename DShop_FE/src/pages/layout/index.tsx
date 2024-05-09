@@ -19,6 +19,7 @@ import DetailArticle from '../detailArticle';
 import DetailOrder from '../profile/detailOrder';
 import Contact from '../contact';
 import Articles from '../articles';
+import ChangePassWord from '../profile/changePassword';
 
 const Layout = () => {
   const ScrollToTopOnNavigate = () => {
@@ -81,18 +82,18 @@ const Layout = () => {
           <Route path={path.detailOrder} element={<DetailOrder />} />
           <Route path={path.contact} element={<Contact />} />
           <Route path={path.article} element={<Articles />} />
+          <Route path={path.changePass} element={<ChangePassWord />} />
         </Routes>
       </div>
       <Footer />
       <div className="back-to-top" id="scrollToTop" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
         <a className="cursor-pointer">
           <div className="btt-back">
-            <span className="btt-label-back">Về đầu trang</span>
-            <span className="btt-icon-back">
+            <div className="btt-icon-back" style={{background: "#b5adad", padding: "15px 20px", borderRadius: "50%"}}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width={16}
-                height={16}
+                width={22}
+                height={22}
                 fill="currentColor"
                 className="bi bi-arrow-bar-up"
                 viewBox="0 0 16 16"
@@ -103,7 +104,7 @@ const Layout = () => {
                   d="M8 10a.5.5 0 0 0 .5-.5V3.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 3.707V9.5a.5.5 0 0 0 .5.5zm-7 2.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13a.5.5 0 0 1-.5-.5z"
                 />{' '}
               </svg>
-            </span>
+            </div>
           </div>
         </a>
       </div>

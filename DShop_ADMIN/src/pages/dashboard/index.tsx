@@ -373,7 +373,8 @@ const Dashboard = () => {
   };
 
   // Năm bắt đầu và kết thúc
-  const startYear = 2023;
+  const currentDate  = new Date();
+  const startYear = currentDate .getFullYear();
   const endYear = new Date().getFullYear() + 1; // Tính năm hiện tại và thêm 1 năm để có năm kết thúc
 
   const months = [];

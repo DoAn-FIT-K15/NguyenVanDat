@@ -1,20 +1,17 @@
 export interface City {
-  code: number;
-  codename: string;
-  division_type: string;
-  name: string;
+  province_id: string;
+  province_name: string;
+  province_type: string;
 }
 export interface District {
-  code: number;
-  codename: string;
-  division_type: string;
-  name: string;
-  province_code: number;
+  district_id: string;
+  district_name: string;
+  district_type: string;
+  province_id: string;
 }
 export interface Ward {
-  code: number;
-  codename: string;
-  district_code: number;
-  division_type: string;
-  name: string;
+  district_id: string;
+  ward_id: string;
+  ward_name: string;
+  ward_type: string;
 }

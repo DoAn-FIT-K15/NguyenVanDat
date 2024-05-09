@@ -1,4 +1,4 @@
-.cancel-order{
+.cancel-order {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -10,22 +10,22 @@
 .cancel-order span {
   color: white;
 }
-.da-xac-nhan{
+.da-xac-nhan {
   color: blue;
 }
-.dang-giao{
+.dang-giao {
   color: greenyellow;
 }
-.da-giao{
-  color: chartreuse
+.da-giao {
+  color: chartreuse;
 }
-.da-huy{
+.da-huy {
   color: red;
 }
-.bung-hang{
+.bung-hang {
   color: red;
 }
-.modal-cancel-order{
+.modal-cancel-order {
   align-items: center;
   flex-direction: column;
   justify-items: center;
@@ -63,15 +63,15 @@
 }
 @media (max-width: 1300px) and (min-width: 992px) {
   .cancel-order {
-    border-radius: 6px; 
-  } 
+    border-radius: 6px;
+  }
 }
 
 @media (max-width: 992px) and (min-width: 376px) {
   .cancel-order {
     border-radius: 4px;
-  } 
-  .modal-cancel-order .action .huy{
+  }
+  .modal-cancel-order .action .huy {
     height: 30px;
   }
   .modal-cancel-order .action .xac-nhan {
@@ -82,8 +82,8 @@
 @media (max-width: 376px) and (min-width: 0px) {
   .cancel-order {
     border-radius: 4px;
-  } 
-  .modal-cancel-order .action .huy{
+  }
+  .modal-cancel-order .action .huy {
     height: 20px;
   }
   .modal-cancel-order .action .xac-nhan {
@@ -93,4 +93,29 @@
   .modal-cancel-order .action span {
     font-size: 14px;
   }
+}
+
+.change_password input {
+  width: 40%;
+  height: 55px;
+  padding: 5px 20px;
+  color: #5c5c5c;
+  font-weight: 500;
+  border: 1px solid transparent;
+  background: #ededed;
+  outline: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -o-appearance: none;
+  appearance: none;
+  font-style: italic;
+}
+
+.change_password input:focus {
+  background: #fff;
+  border-color: #ededed;
+}
+
+.order-id:hover a{
+  color: red ;
 }

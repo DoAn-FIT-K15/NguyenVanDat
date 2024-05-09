@@ -3,8 +3,8 @@ export interface Sale {
   name: string;
   discount: number;
   isActive: number;
-  startDate: string;
-  endDate: string;
+  startDate: Date;
+  endDate: Date;
   modifiedDate: string;
   createdDate: string;
 }

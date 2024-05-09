@@ -4,9 +4,7 @@ import lombok.Data;
 
 @Data
 public class AddressRequest {
-    private String firstName;
-
-    private String lastName;
+    private String fullName;
 
     private String phone;
 

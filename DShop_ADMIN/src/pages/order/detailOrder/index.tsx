@@ -352,7 +352,7 @@ const DetailOrder = () => {
       const res = await provinceApi.cityApi();
 
       if (res.status === 200) {
-        setCities(res.data);
+        setCities(res?.data.results);
       }
     } catch (error) {
       console.error(error);
@@ -362,7 +362,7 @@ const DetailOrder = () => {
     try {
       const res = await provinceApi.districtApi(order?.province);
       if (res.status === 200) {
-        setDistricts(res.data.districts);
+        setDistricts(res?.data.results);
       }
     } catch (error) {
       console.error(error);
@@ -373,7 +373,7 @@ const DetailOrder = () => {
       const res = await provinceApi.wardApi(order?.district);
 
       if (res.status === 200) {
-        setWards(res.data.wards);
+        setWards(res?.data.results);
       }
     } catch (error) {
       console.error(error);
@@ -392,9 +392,9 @@ const DetailOrder = () => {
       getWards();
     }
   }, [order]);
-  const cityName = cities.find((city) => city.code === parseInt(order?.province || ''));
-  const districtName = districts.find((district) => district.code === parseInt(order?.district || ''));
-  const wardName = wards.find((ward) => ward.code === parseInt(order?.wards || ''));
+  const cityName = cities.find((city) => city.province_id === (order?.province || ''));
+  const districtName = districts.find((district) => district.district_id === (order?.district || ''));
+  const wardName = wards.find((ward) => ward.ward_id === (order?.wards || ''));
   return (
     <>
       {isLoading && <LoadingPage />}
@@ -417,7 +417,7 @@ const DetailOrder = () => {
           <div className="flex pt-5">
             <span className="text-base text-black font-bold w-[20%]">Địa chỉ: </span>
             <span className="text-base ml-5">
-              {order?.addressDetail}, {wardName?.name}, {districtName?.name}, {cityName?.name}
+              {order?.addressDetail}, {wardName?.ward_name}, {districtName?.district_name}, {cityName?.province_name}
             </span>
           </div>
           <div className="flex items-center pt-5">

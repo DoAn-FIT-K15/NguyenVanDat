@@ -1,4 +1,5 @@
 import logo from './images/logoLight.png';
+import logoBlack from './images/logoBlack.png';
 import logoDark from './images/logoDark.png';
 import logoZaloPay from './images/LogoZaloPay.png';
 import LogoVnPay from './images/LogoVnPay.svg';
@@ -10,6 +11,7 @@ import atmvisamaster from './images/atm_visa_master_jcb.svg';
 
 const Images = {
   logo,
+  logoBlack,
   logoDark,
   logoZaloPay,
   LogoVnPay,

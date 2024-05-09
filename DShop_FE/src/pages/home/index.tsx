@@ -258,7 +258,7 @@ const Home = () => {
   });
   let countdownInterval;
   React.useEffect(() => {
-    const targetDate = new Date('2023-12-24T10:00:00').getTime();
+    const targetDate = new Date('2024-06-24T10:00:00').getTime();
     const calculateCountdown = () => {
       const now = new Date().getTime();
       const timeDifference = targetDate - now;
@@ -963,7 +963,7 @@ const Home = () => {
                 <div className="policy-item__info">
                   <h3 className="info-title">Tổng Đài Bán Hàng Miễn Phí</h3>
                   <div className="infor-des">
-                    Gọi <b>0966821574</b> để được tư vấn
+                    Gọi <b>0965695182</b> để được tư vấn
                   </div>
                 </div>
               </div>

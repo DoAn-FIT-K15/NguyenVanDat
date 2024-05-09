@@ -33,7 +33,7 @@ const EditOrder = () => {
       const res = await provinceApi.cityApi();
 
       if (res.status === 200) {
-        setCities(res.data);
+        setCities(res?.data.results);
       }
     } catch (error) {
       console.error(error);
@@ -43,7 +43,7 @@ const EditOrder = () => {
     try {
       const res = await provinceApi.districtApi(cityId);
       if (res.status === 200) {
-        setDistricts(res.data.districts);
+        setDistricts(res?.data.results);
       }
     } catch (error) {
       console.error(error);
@@ -54,7 +54,7 @@ const EditOrder = () => {
       const res = await provinceApi.wardApi(districtId);
 
       if (res.status === 200) {
-        setWards(res.data.wards);
+        setWards(res?.data.results);
       }
     } catch (error) {
       console.error(error);
@@ -298,8 +298,8 @@ const EditOrder = () => {
             {!!cities &&
               !!cities.length &&
               cities.map((city) => (
-                <option key={city.code} value={city.code}>
-                  {city.name}
+                <option key={city.province_id} value={city.province_id}>
+                  {city.province_name}
                 </option>
               ))}
           </select>
@@ -315,8 +315,8 @@ const EditOrder = () => {
             {!!districts &&
               !!districts.length &&
               districts.map((district) => (
-                <option key={district.code} value={district.code}>
-                  {district.name}
+                <option key={district.district_id} value={district.district_id}>
+                  {district.district_name}
                 </option>
               ))}
           </select>
@@ -332,8 +332,8 @@ const EditOrder = () => {
             {!!wards &&
               !!wards.length &&
               wards.map((ward) => (
-                <option key={ward.code} value={ward.code}>
-                  {ward.name}
+                <option key={ward.ward_id} value={ward.ward_id}>
+                  {ward.ward_name}
                 </option>
               ))}
           </select>

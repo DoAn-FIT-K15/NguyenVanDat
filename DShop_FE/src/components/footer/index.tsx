@@ -88,14 +88,14 @@ const Footer = () => {
                           <b>CÔNG TY TNHH DKING</b>
                           <br />
                           <b>Trụ sở chính: </b>
-                          Số 7, Nghinh Tiên, <br />
-                          Xã Nguyệt Đức, Huyện Yên Lạc, Tỉnh Vĩnh Phúc <br />
+                          Lô 04, khu công nghiệp Trần Lãm, Thành phố Thái Bình, tỉnh Thái Bình <br />
+                           <br />
                         </li>
                         <li className="contact-2">
-                          <b>Điện thoại:</b>
+                          <b>Điện thoại: 0989.789.999</b>
                         </li>
                         <li className="contact-4">
-                          <b>Email:</b>
+                          <b>Email: dkingclothes@gmail.com</b>
                         </li>{' '}
                       </ul>
                     </div>

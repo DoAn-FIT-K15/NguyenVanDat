@@ -9,9 +9,9 @@ import java.util.Date;
 public class AddressResponse {
     private long id;
 
-    private String firstName;
+    private String fullName;
 
-    private String lastName;
+    private String email;
 
     private String phone;
 

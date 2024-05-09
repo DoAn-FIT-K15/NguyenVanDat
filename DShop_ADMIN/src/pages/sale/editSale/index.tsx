@@ -57,7 +57,9 @@ const EditSale = () => {
         });
         return;
       }
-      if (startDate > endDate) {
+      const startDay = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+      const endDay = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+      if (startDay > endDay) {
         toast.error(`Ngày kết thúc không thể nhỏ hơn ngày bắt đầu`, {
           position: 'top-right',
           pauseOnHover: false,
@@ -258,7 +260,7 @@ const EditSale = () => {
                 className="w-[80%] h-9 pl-2 rounded-lg hover:border-none focus:border-none"
                 placeholder="Nhập phần trăm"
                 value={discount}
-                onChange={(e) => setDiscount(e.target.value)}
+                onChange={(e) => setDiscount(parseInt(e.target.value))}
               />
               <span className="font-normal text-base decoration-black">%</span>
             </div>
@@ -267,7 +269,7 @@ const EditSale = () => {
             <span className="text-base text-black font-bold">Ngày bắt đầu: </span>
             <DatePicker
               selected={startDateUD}
-              value={startDate}
+              value={startDateUD}
               onChange={(date) => setStartDateUD(date)}
               timeInputLabel="Time:"
               dateFormat="dd/MM/yyyy h:mm:ss aa"
@@ -280,7 +282,7 @@ const EditSale = () => {
             <span className="text-base text-black font-bold">Ngày kết thúc: </span>
             <DatePicker
               selected={endDateUD}
-              value={endDate}
+              value={endDateUD}
               onChange={(date) => setEndDateUD(date)}
               timeInputLabel="Time:"
               dateFormat="dd/MM/yyyy h:mm:ss aa"

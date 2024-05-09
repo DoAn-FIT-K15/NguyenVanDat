@@ -36,8 +36,8 @@ const ThankYou = () => {
   });
   const urlParams = new URLSearchParams(window.location.search);
   const getResultVNPay = async () => {
-    if (!!token) {
-      if (!!urlParams) {
+    if (!token) {
+      if (!urlParams) {
         try {
           const vnp_Amount = urlParams.get('vnp_Amount');
           const vnp_BankCode = urlParams.get('vnp_BankCode');
@@ -164,7 +164,7 @@ const ThankYou = () => {
       const res = await provinceApi.cityApi();
 
       if (res.status === 200) {
-        setCities(res.data);
+        setCities(res?.data.results);
       }
     } catch (error) {
       console.error(error);
@@ -174,7 +174,7 @@ const ThankYou = () => {
     try {
       const res = await provinceApi.districtApi(data?.province);
       if (res.status === 200) {
-        setDistricts(res.data.districts);
+        setDistricts(res?.data.results);
       }
     } catch (error) {
       console.error(error);
@@ -185,7 +185,7 @@ const ThankYou = () => {
       const res = await provinceApi.wardApi(data?.district);
 
       if (res.status === 200) {
-        setWards(res.data.wards);
+        setWards(res?.data.results);
       }
     } catch (error) {
       console.error(error);
@@ -204,9 +204,9 @@ const ThankYou = () => {
       getWards();
     }
   }, []);
-  const cityName = cities.find((city) => city.code === parseInt(data?.province || ''));
-  const districtName = districts.find((district) => district.code === parseInt(data?.district || ''));
-  const wardName = wards.find((ward) => ward.code === parseInt(data?.wards || ''));
+  const cityName = cities.find((city) => city.province_id === (data?.province || ''));
+  const districtName = districts.find((district) => district.district_id === (data?.district || ''));
+  const wardName = wards.find((ward) => ward.ward_id === (data?.wards || ''));
   return (
     <div className="flexbox check-out">
       <div className="banner">
@@ -374,7 +374,7 @@ const ThankYou = () => {
           <div className="main">
             <div className="main-header">
               <Link to={path.home} className="logo cursor-pointer">
-                <img src={Images.logo} className="logo-text" />
+                <img src={Images.logoBlack} className="logo-text" />
               </Link>
               <style
                 dangerouslySetInnerHTML={{
@@ -455,11 +455,11 @@ const ThankYou = () => {
                             <p>
                               {data.addressDetail}
                               <br />
-                              {wardName?.name}
+                              {wardName?.ward_name}
                               <br />
-                              {districtName?.name}
+                              {districtName?.district_name}
                               <br />
-                              {cityName?.name}
+                              {cityName?.province_name}
                               <br />
                             </p>
                             {/* <h3>Phương thức thanh toán</h3>
@@ -493,7 +493,7 @@ const ThankYou = () => {
               </div>
             </div>
             <div className="hrv-coupons-popup-site-overlay" />
-            <div className="main-footer footer-powered-by">Powered by Kim Thăng</div>
+            <div className="main-footer footer-powered-by">Powered by DKing</div>
           </div>
         </div>
       </div>

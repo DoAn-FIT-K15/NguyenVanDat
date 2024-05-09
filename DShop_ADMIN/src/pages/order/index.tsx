@@ -176,9 +176,9 @@ const Order = () => {
     try {
       const res = await provinceApi.cityApi();
       if (res.status === 200) {
-        const newCity = res.data.map((city) => ({
-          code: city.code,
-          name: city.name,
+        const newCity = res.data.results.map((city) => ({
+          code: city.province_id,
+          name: city.province_name,
         }));
         newCity.forEach((city) => {
           setCityMap((prevMapping) => ({
@@ -196,9 +196,9 @@ const Order = () => {
       setLoading(true);
       const res = await provinceApi.districtApi(id);
       if (res.status === 200) {
-        const newDistrict = res.data.districts.map((district) => ({
-          code: district.code,
-          name: district.name,
+        const newDistrict = res.data.results.map((district) => ({
+          code: district.district_id,
+          name: district.district_name,
         }));
         newDistrict.forEach((district) => {
           setDistrictMap((prevMapping) => ({
@@ -217,9 +217,9 @@ const Order = () => {
     try {
       const res = await provinceApi.wardApi(id);
       if (res.status === 200) {
-        const newWards = res.data.wards.map((ward) => ({
-          code: ward.code,
-          name: ward.name,
+        const newWards = res.data.results.map((ward) => ({
+          code: ward.ward_id,
+          name: ward.ward_name,
         }));
         newWards.forEach((ward) => {
           setWardMap((prevMapping) => ({

@@ -14,8 +14,7 @@ const AddEmp = () => {
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const AddEmp = async () => {
@@ -38,7 +37,7 @@ const AddEmp = () => {
         });
         return;
       }
-      if (!lastName) {
+      if (!fullName) {
         toast.error('Hãy nhập mật tên', {
           position: 'top-right',
           pauseOnHover: false,
@@ -46,14 +45,7 @@ const AddEmp = () => {
         });
         return;
       }
-      if (!firstName) {
-        toast.error('Hãy nhập mật họ', {
-          position: 'top-right',
-          pauseOnHover: false,
-          theme: 'dark',
-        });
-        return;
-      }
+      
       if (!phone) {
         toast.error('Hãy nhập số điện thoại', {
           position: 'top-right',
@@ -92,8 +84,7 @@ const AddEmp = () => {
         const data = {
           username: username,
           password: password,
-          firstName: firstName,
-          lastName: lastName,
+          fullName: fullName,
           email: email,
           phone: phone,
         };
@@ -162,15 +153,11 @@ const AddEmp = () => {
           <div className="w-[30%] text-black font-bold">Họ và Tên :</div>
           <div className="w-[70%] flex items-center justify-between">
             <input
-              className="w-[65%] rounded-md h-10 pl-2 border-[#737373]"
-              placeholder="Họ"
-              onChange={(e) => setLastName(e.target.value)}
+              className="w-[100%] rounded-md h-10 pl-2 border-[#737373]"
+              placeholder="Họ và tên"
+              onChange={(e) => setFullName(e.target.value)}
             />
-            <input
-              className="w-[30%] rounded-md h-10 pl-2 border-[#737373] ml-3"
-              placeholder="Tên"
-              onChange={(e) => setFirstName(e.target.value)}
-            />
+            
           </div>
         </div>
         <div className="flex items-center justify-around mt-3">

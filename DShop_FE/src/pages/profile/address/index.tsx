@@ -29,7 +29,7 @@ const Address = () => {
     try {
       const res = await provinceApi.cityApi();
       if (res.status === 200) {
-        const newCity = res.data.map((city) => ({
+        const newCity = res.data.results.map((city) => ({
           code: city.province_id,
           name: city.province_name,
         }));
@@ -48,9 +48,9 @@ const Address = () => {
     try {
       const res = await provinceApi.districtApi(id);
       if (res.status === 200) {
-        const newDistrict = res.data.districts.map((district) => ({
-          code: district.code,
-          name: district.name,
+        const newDistrict = res.data.results.map((district) => ({
+          code: district.district_id,
+          name: district.district_name,
         }));
         newDistrict.forEach((district) => {
           setDistrictMap((prevMapping) => ({
@@ -67,9 +67,9 @@ const Address = () => {
     try {
       const res = await provinceApi.wardApi(id);
       if (res.status === 200) {
-        const newWards = res.data.wards.map((ward) => ({
-          code: ward.code,
-          name: ward.name,
+        const newWards = res.data.results.map((ward) => ({
+          code: ward.ward_id,
+          name: ward.ward_name,
         }));
         newWards.forEach((ward) => {
           setWardMap((prevMapping) => ({
@@ -89,7 +89,7 @@ const Address = () => {
     if (address.length > 0) {
       address.forEach(async (item) => {
         if (item.district !== null && item.district !== undefined && !Number.isNaN(item.district)) {
-          await getWards(parseInt(item.district));
+          await getWards((item.district));
         }
       });
     }
@@ -98,7 +98,7 @@ const Address = () => {
     if (address.length > 0) {
       address.forEach(async (item) => {
         if (item.province !== null && item.province !== undefined && !Number.isNaN(item.province)) {
-          await getDistricts(parseInt(item.province));
+          await getDistricts((item.province));
         }
       });
     }
@@ -137,6 +137,7 @@ const Address = () => {
       console.error(error);
     }
   };
+  console.log("address:", address)
   return (
     <div className="layout-account">
       <div className="container">
@@ -159,9 +160,6 @@ const Address = () => {
                             <div className="col-lg-12 col-xs-12 clearfix">
                               <div className="address_title ">
                                 <h3>
-                                  <strong>
-                                    {item.lastName} {item.firstName}
-                                  </strong>
                                   {item.focus === 1 && <span className="default_address note">(Địa chỉ mặc định)</span>}
                                 </h3>
                                 <p className="address_actions text-right">
@@ -219,7 +217,7 @@ const Address = () => {
                                   <div className="col-lg-12 col-md-12 large_view">
                                     <p>
                                       <strong>
-                                        {item.lastName} {item.firstName}
+                                        {item.fullName} 
                                       </strong>
                                     </p>
                                   </div>
@@ -230,9 +228,8 @@ const Address = () => {
                                     </div>
                                     <div className="lb-right">
                                       <p>{item.addressDetail}</p>
-                                      <p>{wardMap[item.wards]}</p>
                                       <p>
-                                        {districtMap[item.district]}, {cityMap[item.province]}
+                                      {wardMap[item.wards]}, {districtMap[item.district]}, {cityMap[item.province]}
                                       </p>
                                     </div>
                                   </div>

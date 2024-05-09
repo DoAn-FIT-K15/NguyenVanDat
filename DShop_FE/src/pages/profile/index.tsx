@@ -168,10 +168,11 @@ const Profile = () => {
   }, [user]);
   let cityName, districtName, wardName;
   if (user && user.addresses && user.addresses.length > 0) {
-    cityName = cities.find((city) => city.code === parseInt(user?.addresses[0].province || ''));
-    districtName = districts.find((district) => district.code === parseInt(user?.addresses[0].district || ''));
-    wardName = wards.find((ward) => ward.code === parseInt(user?.addresses[0].wards || ''));
+    cityName = cities.find((city) => city.province_id === (user?.addresses[0].province || ''));
+    districtName = districts.find((district) => district.district_id === (user?.addresses[0].district || ''));
+    wardName = wards.find((ward) => ward.ward_id === (user?.addresses[0].wards || ''));
   }
+  console.log("email", user)
   return (
     <div className="layout-account">
       <div className="container">
@@ -186,22 +187,32 @@ const Profile = () => {
                 <div className="col-12 wrap_inforAccount" id="customer_sidebar">
                   <p className="title-detail">Thông tin tài khoản</p>
                   <h2 className="name_account">
-                    {user?.fullName} 
+                    <strong>Họ và tên:</strong> {user?.fullName}
                   </h2>
-                  <p className="email ">{user?.email}</p>
+                  <p className="email ">{user1?.email}</p>
                   <div className="address ">
+                    <strong>Địa chỉ:</strong>
                     {user?.addresses && user.addresses.length > 0 ? (
                       <>
-                        <p>{user.addresses[0].addressDetail}</p>
-                        <p>{wardName?.name}</p>
-                        <p>{districtName?.name}</p>
-                        <p>{cityName?.name}</p>
+                        <span>
+                          {' '}
+                          {user.addresses[0].addressDetail}, {wardName?.ward_name}, {districtName?.district_name},{' '}
+                          {cityName?.province_name}
+                        </span>
                       </>
                     ) : (
                       <p>Chưa có địa chỉ</p>
                     )}
+                    {user && user.addresses && user.addresses.length > 0 ? (
+                      user.addresses.map((address, index) => (
+                        <p key={index}>
+                          <strong>Số điện thoại:</strong> {address.phone}
+                        </p>
+                      ))
+                    ) : (
+                      <p>Không có thông tin số điện thoại.</p>
+                    )}
 
-                    <p>{user?.phone}</p>
                     <Link id="view_address" to={path.address}>
                       Xem địa chỉ
                     </Link>
@@ -235,7 +246,7 @@ const Profile = () => {
                                     return (
                                       <tr className="odd " key={i}>
                                         <td
-                                          className="text-center"
+                                          className="text-center order-id"
                                           onClick={() => navigate(path.detailOrder, { state: item.id })}
                                         >
                                           <a className="cursor-pointer">#{item.codeOrders}</a>

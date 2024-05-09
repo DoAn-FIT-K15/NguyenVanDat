@@ -13,6 +13,10 @@ public class UserResponse {
 
     private String username;
 
+    private String phone;
+
+    private String email;
+
     private String fullName;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss dd-MM-yyyy", timezone = "Asia/Ho_Chi_Minh")

@@ -34,7 +34,7 @@
 /*---------------------- Sroll to Top -------------------*/
 .back-to-top {
   position: fixed;
-  right: 10px;
+  right: 40px;
   bottom: 150px;
   opacity: 0;
   visibility: hidden;

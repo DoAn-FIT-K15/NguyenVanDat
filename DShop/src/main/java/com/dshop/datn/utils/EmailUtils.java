@@ -2,13 +2,18 @@ package com.dshop.datn.utils;
 
 import com.dshop.datn.models.OrderItem;
 import com.dshop.datn.models.Orders;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
 import java.text.SimpleDateFormat;
 import java.util.Base64;
@@ -33,22 +38,88 @@ public class EmailUtils {
         this.otpService = otpService;
     }
 
-    public void sendOtpEmail(String email) throws MessagingException {
-        Otp = otpUtil.generateOtp();
-        otpService.storeOtp(email, Otp);
-        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-        mimeMessageHelper.setTo(email);
-        mimeMessageHelper.setSubject("Xác Minh OTP");
-        mimeMessageHelper.setText("""
-                <div style="font-family: Arial, sans-serif;">
-                  <p>Sử dụng mã OTP này để xác thực tài khoản của bạn:</p>
-                  <h2>%s</h2>
-                  <p>OTP này có giá trị 5 phút.</p>
-                </div>
-                """.formatted(Otp), true);
+    public String getCityName(Orders orders) {
+        RestTemplate restTemplate = new RestTemplate();
+        try {
+            ResponseEntity<String> response = restTemplate.getForEntity("https://vapi.vnappmob.com/api/province/", String.class);
+            if (response.getStatusCode() == HttpStatus.OK) {
+                String responseBody = response.getBody();
+                ObjectMapper objectMapper = new ObjectMapper();
+                JsonNode jsonNode = objectMapper.readTree(responseBody);
+                JsonNode resultsNode = jsonNode.get("results");
+                if (resultsNode.isArray()) {
+                    for (JsonNode resultNode : resultsNode) {
+                        if (resultNode.has("province_id") && resultNode.has("province_name")) {
+                            String provinceId = resultNode.get("province_id").asText();
+                            String provinceName = resultNode.get("province_name").asText();
+                            if (provinceId.equals(orders.getProvince())) {
+                                return provinceName;
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // Log lỗi hoặc thông báo lỗi
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-        javaMailSender.send(mimeMessage);
+    public String getDistrictName(Orders orders) {
+        RestTemplate restTemplate = new RestTemplate();
+        try {
+            ResponseEntity<String> response = restTemplate.getForEntity("https://vapi.vnappmob.com/api/province/district/" + orders.getProvince(), String.class);
+            if (response.getStatusCode() == HttpStatus.OK) {
+                String responseBody = response.getBody();
+                ObjectMapper objectMapper = new ObjectMapper();
+                JsonNode jsonNode = objectMapper.readTree(responseBody);
+                JsonNode resultsNode = jsonNode.get("results");
+                if (resultsNode.isArray()) {
+                    for (JsonNode resultNode : resultsNode) {
+                        if (resultNode.has("district_id") && resultNode.has("district_name")) {
+                            String districtId = resultNode.get("district_id").asText();
+                            String districtName = resultNode.get("district_name").asText();
+                            if (districtId.equals(orders.getDistrict())) {
+                                return districtName;
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // Log lỗi hoặc thông báo lỗi
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String getWardName(Orders orders) {
+        RestTemplate restTemplate = new RestTemplate();
+        try {
+            ResponseEntity<String> response = restTemplate.getForEntity("https://vapi.vnappmob.com/api/province/ward/" + orders.getDistrict(), String.class);
+            if (response.getStatusCode() == HttpStatus.OK) {
+                String responseBody = response.getBody();
+                ObjectMapper objectMapper = new ObjectMapper();
+                JsonNode jsonNode = objectMapper.readTree(responseBody);
+                JsonNode resultsNode = jsonNode.get("results");
+                if (resultsNode.isArray()) {
+                    for (JsonNode resultNode : resultsNode) {
+                        if (resultNode.has("ward_id") && resultNode.has("ward_name")) {
+                            String wardId = resultNode.get("ward_id").asText();
+                            String wardName = resultNode.get("ward_name").asText();
+                            if (wardId.equals(orders.getWards())) {
+                                return wardName;
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // Log lỗi hoặc thông báo lỗi
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public void sendPassword(String email, String password) throws MessagingException {
@@ -78,18 +149,21 @@ public class EmailUtils {
         mimeMessageHelper.setTo(email);
         mimeMessageHelper.setSubject("Thông Báo Đặt Hàng Thành Công");
         StringBuilder sb = new StringBuilder()
-                .append("<h3>Chúc mừng bạn " + orders.getUser().getUsername() + " đã đặt hàng thành công </h3>").append("<br/>")
+                .append("<h3>Cảm ơn bạn " + orders.getUser().getUsername()+ " đã tin tưởng đặt đơn hàng của DKING. </h3>").append("<br/>")
+                .append("Bạn vui lòng kiểm tra lại thông tin đơn hàng gồm:").append("<br/>")
                 .append("Mã đơn hàng: " + orders.getCodeOrders()).append("<br/>")
                 .append("Tổng tiền: " + totalOrderAmount+ " VNĐ").append("<br/>")
                 .append("Ngày tạo: " + createdDate).append("<br/>")
                 .append("Người nhận: " + orders.getFullName()).append("<br/>")
                 .append("Số điện thoại: " + orders.getPhone()).append("<br/>")
                 .append("Địa chỉ: " + orders.getAddressDetail())
-                .append(", " + orders.getWards())
-                .append(", " + orders.getDistrict())
-                .append(", " + orders.getProvince()).append("<br/>")
-                .append("Theo dõi trạng thái đơn hàng tại đây: ")
-                .append("http://localhost:3000/order/detail/").append(Base64.getUrlEncoder().encodeToString(String.valueOf(orders.getId()).getBytes()));
+                .append(", " + getWardName(orders))
+                .append(", " + getDistrictName(orders))
+                .append(", " + getCityName(orders)).append("<br/>")
+                .append("Với trường hợp sai thông tin đặt hàng bạn có thể báo lại cho shop để hỗ trợ kịp thời.").append("<br/>")
+                .append("Chúc bạn một ngày tốt lành!").append("<br/>")
+                .append("Tiếp tục mua sắm tại: ")
+                .append("http://localhost:3000/");
         mimeMessageHelper.setText(sb.toString(), true);
         mimeMessageHelper.setSentDate(new Date());
 
@@ -114,8 +188,8 @@ public class EmailUtils {
                 .append(", " + orders.getWards())
                 .append(", " + orders.getDistrict())
                 .append(", " + orders.getProvince()).append("<br/>")
-                .append("Tiếp tục mua sắm đơn hàng tại đây: ")
-                .append("http://localhost:3000/").append(Base64.getUrlEncoder().encodeToString(String.valueOf(orders.getId()).getBytes()));
+                .append("Tiếp tục mua sắm tại đây: ")
+                .append("http://localhost:3000/");
         mimeMessageHelper.setText(sb.toString(), true);
         mimeMessageHelper.setSentDate(new Date());
 
@@ -137,11 +211,12 @@ public class EmailUtils {
                 .append("Người nhận: " + orders.getFullName()).append("<br/>")
                 .append("Số điện thoại: " + orders.getPhone()).append("<br/>")
                 .append("Địa chỉ: " + orders.getAddressDetail())
-                .append(", " + orders.getWards())
-                .append(", " + orders.getDistrict())
-                .append(", " + orders.getProvince()).append("<br/>")
-                .append("Bạn hãy chú ý điện thoại để nhận hàng sớm nhất. Theo dõi trạng thái đơn hàng tại đây: ")
-                .append("http://localhost:3000/order/detail/").append(Base64.getUrlEncoder().encodeToString(String.valueOf(orders.getId()).getBytes()));
+                .append(", " + getWardName(orders))
+                .append(", " + getDistrictName(orders))
+                .append(", " + getCityName(orders)).append("<br/>")
+                .append("Đơn hàng sẽ sớm được giao, vui lòng chú ý điện thoại.").append("<br/>")
+                .append("Tiếp tục mua sắm tại đây: ")
+                .append("http://localhost:3000");
         mimeMessageHelper.setText(sb.toString(), true);
         mimeMessageHelper.setSentDate(new Date());
 
@@ -156,12 +231,12 @@ public class EmailUtils {
         mimeMessageHelper.setTo(email);
         mimeMessageHelper.setSubject("Cản Ơn Bạn Đã Đặt Hàng");
         StringBuilder sb = new StringBuilder()
-                .append("<h3> Cảm ơn bạn" + orders.getUser().getUsername() + " đã đặt hàng</h3>").append("<br/>")
+                .append("<h3> Cảm ơn bạn " + orders.getUser().getUsername() + " đã đặt hàng</h3>").append("<br/>")
                 .append("Cảm ơn bạn " + orders.getFullName() + " đã đặt hàng bên chúng tôi").append("<br/>")
                 .append("Bạn có thể đổi trả trong vòng 7 ngày nếu gặp lỗi từ nhà sản xuất.").append("<br/>")
-                .append("Nếu có vấn đề cần thắc mắc hãy liên hệ lại cho chúng tôi 0966821574.").append("<br/>")
+                .append("Nếu có vấn đề cần thắc mắc hãy liên hệ lại cho chúng tôi 0965695182.").append("<br/>")
                 .append("Tiếp tục mua sắm tại đây: ")
-                .append("http://localhost:3000/").append(Base64.getUrlEncoder().encodeToString(String.valueOf(orders.getId()).getBytes()));
+                .append("http://localhost:3000/");
         mimeMessageHelper.setText(sb.toString(), true);
         mimeMessageHelper.setSentDate(new Date());
 
