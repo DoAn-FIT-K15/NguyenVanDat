@@ -15,13 +15,11 @@ const EditProfile = () => {
   const navigate = useNavigate();
 
   const [user, setUser] = useState<User>();
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [isEdit, setIsEdit] = useState(false);
-  const firstNameRef = useRef(null);
-  const lastNameRef = useRef(null);
+  const fullNameRef = useRef(null);
   const phoneRef = useRef(null);
   const emailRef = useRef(null);
 
@@ -60,8 +58,7 @@ const EditProfile = () => {
     if (!!token) {
       try {
         const data = {
-          firstName: firstName || user?.firstName,
-          lastName: lastName || user?.lastName,
+          fullName: fullName || user?.fullName,
           email: email || user?.email,
           phone: phone || user?.phone,
         };
@@ -107,34 +104,19 @@ const EditProfile = () => {
       </div>
       <div className="p-5">
         <div className="flex items-center justify-around mt-3">
-          <div className="w-[30%] text-base text-black font-bold">Họ : </div>
+          <div className="w-[30%] text-base text-black font-bold">Họ và tên : </div>
           <div className="w-[70%] flex items-center">
             <input
-              ref={lastNameRef}
+              ref={fullNameRef}
               className="w-[70%] rounded-md h-10 pl-2 border-[#737373]"
-              placeholder={user?.lastName}
-              onChange={(e) => setLastName(e.target.value)}
+              placeholder={user?.fullName}
+              onChange={(e) => setFullName(e.target.value)}
               readOnly={!isEdit}
             />
-            <i className="bx bx-edit text-2xl font-semibold cursor-pointer" onClick={() => handleEdit(lastNameRef)}></i>
+           
           </div>
         </div>
-        <div className="flex items-center justify-around mt-3">
-          <div className="w-[30%] text-base text-black font-bold">Tên : </div>
-          <div className="w-[70%] flex items-center">
-            <input
-              ref={firstNameRef}
-              className="w-[70%] rounded-md h-10 pl-2 border-[#737373]"
-              placeholder={user?.firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              readOnly={!isEdit}
-            />
-            <i
-              className="bx bx-edit text-2xl font-semibold cursor-pointer"
-              onClick={() => handleEdit(firstNameRef)}
-            ></i>
-          </div>
-        </div>
+        
         <div className="flex items-center justify-around mt-3">
           <div className="w-[30%] text-base text-black font-bold">Email : </div>
           <div className="w-[70%] flex items-center">

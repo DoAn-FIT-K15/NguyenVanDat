@@ -318,7 +318,7 @@ const Footer = () => {
           <div className="footer-copyright text-center">
             <div className="container">
               <p>
-                Copyright © 2023 DKing Powered by N.V.Đạt
+                Copyright © 2024 DKing Powered by N.V.Đạt
               </p>
             </div>
           </div>

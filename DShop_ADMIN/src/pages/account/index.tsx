@@ -270,10 +270,10 @@ const Account = () => {
                         className="bx bxs-show text-2xl font-semibold text-blue"
                         onClick={() => navigate(path.detailAcc, { state: item.id })}
                       ></i>
-                      {/* <i
+                      <i
                         className="bx bxs-pencil text-2xl font-semibold text-blue pt-2"
-                        onClick={() => navigate('/', { state: item.id })}
-                      ></i> */}
+                        onClick={() => navigate('/editProfile', { state: item.id })}
+                      ></i>
                     </td>
                   </tr>
                 );

@@ -119,3 +119,8 @@
 .order-id:hover a{
   color: red ;
 }
+
+.table-container {
+  max-height: 400px; /* Đặt chiều cao tối đa cho phần tử */
+  overflow-y: auto; /* Hiển thị thanh cuộn dọc khi cần */
+}

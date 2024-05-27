@@ -295,7 +295,9 @@ public class OrdersServiceImpl implements OrdersService {
                 orders.setCodeOrders(Utils.getRandomNumber(8));
             }
             //đã thanh toán online
-            if (orders.getPaymentMethod() != null) {
+            String paymentMethod = ordersRequest.getPaymentMethod();
+            if ("VNPay".equals(paymentMethod)) {
+                orders.setPaymentMethod("VNPay");
                 //nếu đã thanh toán online thì satus là 2 chưa thì là 1
                 orders.setIsCheckout(true);
                 orders.setStatus(Constants.APPROVED_STATUS);

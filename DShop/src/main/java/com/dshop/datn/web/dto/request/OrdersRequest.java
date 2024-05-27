@@ -19,4 +19,5 @@ public class OrdersRequest {
 
     private String wards;
 
+    private String paymentMethod;
 }

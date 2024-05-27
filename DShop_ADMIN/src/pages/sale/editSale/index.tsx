@@ -57,8 +57,9 @@ const EditSale = () => {
         });
         return;
       }
-      const startDay = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
-      const endDay = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+      const startDay = new Date(startDateUD.getFullYear(), startDateUD.getMonth(), startDateUD.getDate());
+      const endDay = new Date(endDateUD.getFullYear(), endDateUD.getMonth(), endDateUD.getDate());
+      console.log("start", startDate)
       if (startDay > endDay) {
         toast.error(`Ngày kết thúc không thể nhỏ hơn ngày bắt đầu`, {
           position: 'top-right',
@@ -70,8 +71,8 @@ const EditSale = () => {
       const data = {
         name: nameSale,
         discount: discount,
-        startDate: formatDate(startDateUD),
-        endDate: formatDate(endDateUD),
+        startDate: (startDateUD),
+        endDate: (endDateUD),
       };
       try {
         const url = Api.createSale();

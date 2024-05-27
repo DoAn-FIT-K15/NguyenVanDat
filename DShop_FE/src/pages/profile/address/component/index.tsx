@@ -280,7 +280,7 @@ const ViewEdit = ({ onCancel, mode, setIsAction, addressId, getAddress, addressD
       if (res.data.status) {
         setIsAction(false);
         getAddress();
-        toast.success(`Thay đổi địa chỉ thành công`, {
+        toast.success(`Thay đổi địa chỉ thành công. Vui lòng đăng nhập lại để cập nhật địa chỉ !`, {
           position: 'top-right',
           pauseOnHover: false,
           theme: 'dark',
@@ -363,8 +363,8 @@ const ViewEdit = ({ onCancel, mode, setIsAction, addressId, getAddress, addressD
         </div>
         <span className="">
           hoặc{' '}
-          <Link to="#" onClick={onCancel}>
-            Hủy
+          <Link to="#" onClick={onCancel} style={{ fontSize: '18px' }}>
+            <strong>Hủy</strong>
           </Link>
         </span>
       </div>

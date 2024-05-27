@@ -31,7 +31,6 @@ interface Params {
 
 const Sale = () => {
   const token = useSelector((state: RootState) => state.ReducerAuth.token);
-  const user = useSelector((state: RootState) => state.ReducerAuth.user);
   const [page, setPage] = React.useState(1);
   const [keyword, setKeyword] = React.useState('');
   const [isActive, setIsActive] = React.useState<number>(-1);

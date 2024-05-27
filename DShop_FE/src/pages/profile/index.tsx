@@ -172,7 +172,7 @@ const Profile = () => {
     districtName = districts.find((district) => district.district_id === (user?.addresses[0].district || ''));
     wardName = wards.find((ward) => ward.ward_id === (user?.addresses[0].wards || ''));
   }
-  console.log("email", user)
+
   return (
     <div className="layout-account">
       <div className="container">
@@ -189,7 +189,21 @@ const Profile = () => {
                   <h2 className="name_account">
                     <strong>Họ và tên:</strong> {user?.fullName}
                   </h2>
-                  <p className="email ">{user1?.email}</p>
+                  <p className="email ">
+                    <strong>Email:</strong> {user?.email}
+                  </p>
+                  {/* {user && user.addresses && user.addresses.length > 0 ? (
+                      user.addresses.map((address, index) => (
+                        <p key={index}>
+                          <strong>Số điện thoại:</strong> {address.phone}
+                        </p>
+                      ))
+                    ) : (
+                      <p>Không có thông tin số điện thoại.</p>
+                    )} */}
+                    <p className="phone ">
+                      <strong>SĐT :</strong> {user?.phone}
+                    </p>
                   <div className="address ">
                     <strong>Địa chỉ:</strong>
                     {user?.addresses && user.addresses.length > 0 ? (
@@ -203,15 +217,7 @@ const Profile = () => {
                     ) : (
                       <p>Chưa có địa chỉ</p>
                     )}
-                    {user && user.addresses && user.addresses.length > 0 ? (
-                      user.addresses.map((address, index) => (
-                        <p key={index}>
-                          <strong>Số điện thoại:</strong> {address.phone}
-                        </p>
-                      ))
-                    ) : (
-                      <p>Không có thông tin số điện thoại.</p>
-                    )}
+                    
 
                     <Link id="view_address" to={path.address}>
                       Xem địa chỉ
@@ -221,13 +227,13 @@ const Profile = () => {
                 {orders.length === 0 ? (
                   ''
                 ) : (
-                  <div className="col-12 wrap_orderAccount" id="customer_orders">
+                  <div className="col-12 wrap_orderAccount " id="customer_orders">
                     <div className="customer-table-wrap">
                       <div className="customer_order customer-table-bg">
                         <p className="title-detail">Danh sách đơn hàng mới nhất</p>
                         <div className="table-responsive-overflow">
-                          <div className="table-responsive">
-                            <table className="table table-customers">
+                          <div className="table-responsive table-container">
+                            <table className="table table-customers ">
                               <thead>
                                 <tr>
                                   <th className="order_number text-center">Mã đơn hàng</th>
@@ -241,47 +247,60 @@ const Profile = () => {
                               <tbody>
                                 {!!orders &&
                                   !!orders.length &&
-                                  orders.map((item, i) => {
-                                    // if (i >= 5) return;
-                                    return (
-                                      <tr className="odd " key={i}>
-                                        <td
-                                          className="text-center order-id"
-                                          onClick={() => navigate(path.detailOrder, { state: item.id })}
-                                        >
-                                          <a className="cursor-pointer">#{item.codeOrders}</a>
-                                        </td>
-                                        <td className="text-center">
-                                          <span>{item.orderDate}</span>
-                                        </td>
-                                        <td className="text-right">
-                                          <span className="total money">{formatPrice(totalCost(item.id))}</span>
-                                        </td>
-                                        <td className="text-center">
-                                          <span className="status_pending">
-                                            {item.isCheckout ? 'Đã thanh toán' : 'Chưa thanh toán'}
-                                          </span>
-                                        </td>
-                                        <td className="text-center">
-                                          <span className="status_not fulfilled">
-                                            {item?.status === 1 && 'Chờ xác nhận'}
-                                            {item?.status === 2 && 'Đã xác nhận'}
-                                            {item?.status === 3 && 'Đang giao'}
-                                            {item?.status === 4 && 'Đã giao'}
-                                            {item?.status === 0 && 'Đã hủy'}
-                                            {item?.status === 5 && 'Từ chối nhận hàng'}
-                                          </span>
-                                        </td>
-                                        <td className="text-center">
-                                          {item.status === 1 && (
-                                            <div className="cancel-order" onClick={() => openModal(item.id)}>
-                                              <span>Hủy</span>
-                                            </div>
-                                          )}
-                                        </td>
-                                      </tr>
-                                    );
-                                  })}
+                                  orders
+                                    .slice() // Tạo một bản sao của mảng để tránh thay đổi mảng gốc
+                                    .sort((a, b) => {
+                                      // Chuyển đổi chuỗi ngày thành đối tượng ngày để so sánh
+                                      const dateA = new Date(
+                                        a.orderDate.replace(/(\d{2})-(\d{2})-(\d{4})/, '$2/$1/$3'),
+                                      );
+                                      const dateB = new Date(
+                                        b.orderDate.replace(/(\d{2})-(\d{2})-(\d{4})/, '$2/$1/$3'),
+                                      );
+
+                                      // So sánh ngược lại để sắp xếp mảng theo thứ tự giảm dần của ngày
+                                      return dateB - dateA;
+                                    })
+                                    .map((item, i) => {
+                                      return (
+                                        <tr className="odd " key={i}>
+                                          <td
+                                            className="text-center order-id"
+                                            onClick={() => navigate(path.detailOrder, { state: item.id })}
+                                          >
+                                            <a className="cursor-pointer">#{item.codeOrders}</a>
+                                          </td>
+                                          <td className="text-center">
+                                            <span>{item.orderDate}</span>
+                                          </td>
+                                          <td className="text-right">
+                                            <span className="total money">{formatPrice(totalCost(item.id))}</span>
+                                          </td>
+                                          <td className="text-center">
+                                            <span className="status_pending">
+                                              {item.isCheckout ? 'Đã thanh toán' : 'Chưa thanh toán'}
+                                            </span>
+                                          </td>
+                                          <td className="text-center">
+                                            <span className="status_not fulfilled">
+                                              {item?.status === 1 && 'Chờ xác nhận'}
+                                              {item?.status === 2 && 'Đã xác nhận'}
+                                              {item?.status === 3 && 'Đang giao'}
+                                              {item?.status === 4 && 'Đã giao'}
+                                              {item?.status === 0 && 'Đã hủy'}
+                                              {item?.status === 5 && 'Từ chối nhận hàng'}
+                                            </span>
+                                          </td>
+                                          <td className="text-center">
+                                            {item.status === 1 && (
+                                              <div className="cancel-order" onClick={() => openModal(item.id)}>
+                                                <span>Hủy</span>
+                                              </div>
+                                            )}
+                                          </td>
+                                        </tr>
+                                      );
+                                    })}
                               </tbody>
                             </table>
                           </div>

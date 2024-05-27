@@ -137,7 +137,7 @@ const Address = () => {
       console.error(error);
     }
   };
-  console.log("address:", address)
+  // console.log("address:", address)
   return (
     <div className="layout-account">
       <div className="container">
@@ -214,12 +214,11 @@ const Address = () => {
                             {isEdit[i] !== true && (
                               <div className="customer_address">
                                 <div className="view_address row">
-                                  <div className="col-lg-12 col-md-12 large_view">
-                                    <p>
-                                      <strong>
-                                        {item.fullName} 
-                                      </strong>
-                                    </p>
+                                <div className="col-lg-12 col-md-12 large_view">
+                                    <div className="lb-left">
+                                      <b>Họ và tên:</b>
+                                    </div>
+                                    <div className="lb-right">{item.fullName}</div>
                                   </div>
                                   <div className="col-lg-12 col-md-12 large_view"></div>
                                   <div className="col-lg-12 col-md-12 large_view">

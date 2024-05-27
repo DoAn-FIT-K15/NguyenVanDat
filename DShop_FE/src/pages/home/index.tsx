@@ -369,7 +369,7 @@ const Home = () => {
       <div className="section-home-category">
         <div className="container">
           <div className="section-title">
-            <h2 style={{ fontWeight: 'bold' }} className="text-start">
+            <h2 className="text-start">
               <Link to={path.product}>Danh mục nổi bật</Link>
             </h2>{' '}
             <div className="swiper-nav">
@@ -494,7 +494,7 @@ const Home = () => {
               </a>
             </h2>
             {/* đếm ngược  */}
-            <div className="section-countdown flip-js-countdown countdown-show">
+            {/* <div className="section-countdown flip-js-countdown countdown-show">
               <div
                 className="auto-due soon"
                 data-face="slot"
@@ -538,7 +538,7 @@ const Home = () => {
                   </span>
                 </span>
               </div>
-            </div>
+            </div> */}
             <div className="swiper-nav">
               <span
                 className={`swiper-button swiper-category-prev ${

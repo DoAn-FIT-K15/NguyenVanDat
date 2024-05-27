@@ -1,7 +1,7 @@
 import React from 'react';
 import '../styles.css';
 import Images from '~/static';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import path from '~/constants/path';
 import { Order, OrderItem } from '~/types/order.type';
 import { API_URL_IMAGE, formatPrice } from '~/constants/utils';
@@ -11,10 +11,8 @@ import { City, District, Ward } from '~/types/province.type';
 import paymentMethodApi from '~/apis/paymentMethod.apis';
 import { useSelector } from 'react-redux';
 import { RootState } from '~/redux/reducers';
-import { toast } from 'react-toastify';
 import { REQUEST_API } from '~/constants/method';
 import cartApi from '~/apis/cart.apis';
-import orderApi from '~/apis/order.apis';
 
 const ThankYou = () => {
   const token = useSelector((state: RootState) => state.AuthReducer.token);
@@ -97,50 +95,18 @@ const ThankYou = () => {
   const createOrder = async () => {
     try {
       const res = await cartApi.orderCart(order.id, data);
-      if (res.data.data) {
-      } else {
-      }
+      
     } catch (error) {
       console.error(error);
     }
   };
-  const getResultZaloPay = async () => {
-    if (!!token) {
-      if (!!urlParams) {
-        try {
-          const apptransid = urlParams.get('apptransid');
-          const url = paymentMethodApi.getZaloStatus(apptransid);
-          const [res] = await Promise.all([
-            REQUEST_API({
-              url: url,
-              method: 'get',
-              token: token,
-            }),
-          ]);
-          if (res.returncode === 1) {
-            setSuccess(true);
-            createOrder();
-          } else {
-            setSuccess(false);
-          }
-        } catch (error) {
-          console.error(error);
-        }
-      }
-    }
-  };
-  React.useEffect(() => {
-    if (urlParams.get('apptransid')) {
-      getResultZaloPay();
-    }
-  }, []);
+  
   const getOrder = async () => {
     try {
       const res = await cartApi.getDetailOrder(order.id);
       if (res.data.status) {
         setOrder2(res.data.data);
-      } else {
-      }
+      } 
     } catch (error) {
       console.error(error);
     }

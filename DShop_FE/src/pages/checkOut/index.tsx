@@ -42,7 +42,7 @@ const CheckOut = () => {
   const [bankTransfer, setBankTransfer] = React.useState(false);
   const [payOnDelivery, setPayOnDelivery] = React.useState(false);
   const [vnPay, setVnPay] = React.useState(false);
-  const [zaloPay, setZaloPay] = React.useState(false);
+  const [paymentMethod, setPaymentMethod] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
 
   const getCities = async () => {
@@ -187,7 +187,7 @@ const CheckOut = () => {
       });
       return;
     }
-    if (!bankTransfer && !payOnDelivery && !vnPay && !zaloPay) {
+    if (!bankTransfer && !payOnDelivery && !vnPay) {
       toast.error('Vui lòng chọn 1 phương thức thanh toán', {
         position: 'top-right',
         pauseOnHover: false,
@@ -195,12 +195,12 @@ const CheckOut = () => {
       });
       return;
     }
+    
     if (bankTransfer || payOnDelivery) {
-      createOrder();
+      createOrder(paymentMethod);
     } else if (vnPay) {
       createVnPay();
-    } else if (zaloPay) {
-      createZaloPay();
+      createOrder(paymentMethod);
     }
   };
   const handlePayOnDelivery = () => {
@@ -209,12 +209,10 @@ const CheckOut = () => {
   };
   const handleVNPay = () => {
     setVnPay(true);
+    setPaymentMethod('VNPay');
     setBankTransfer(false);
   };
-  const handleZaloPay = () => {
-    setZaloPay(true);
-    setBankTransfer(false);
-  };
+
   const data = {
     fullName: fullName,
     phone: phone,
@@ -223,6 +221,7 @@ const CheckOut = () => {
     province: cityId,
     district: districtId,
     wards: wardId,
+    paymentMethod: paymentMethod,
   };
   localStorage.setItem('data', JSON.stringify(data));
   localStorage.setItem('cartItem', JSON.stringify(cartItem));
@@ -263,7 +262,7 @@ const CheckOut = () => {
       }
     }
   };
-  const createOrder = async () => {
+  const createOrder = async (paymentMethod) => {
     try {
       setIsLoading(true);
       const res = await cartApi.orderCart(carts.id, data);
@@ -279,42 +278,7 @@ const CheckOut = () => {
       setIsLoading(false);
     }
   };
-  const createZaloPay = async () => {
-    if (!!token) {
-      try {
-        setIsLoading(true);
-        const url = paymentMethodApi.createZaloPay(carts.id);
-        const [res] = await Promise.all([
-          REQUEST_API({
-            url: url,
-            method: 'post',
-            token: token,
-          }),
-        ]);
-        console.log(res);
 
-        if (res.returncode === 1) {
-          setIsLoading(false);
-          window.location.href = `${res.orderurl}`;
-        } else {
-          toast.error(`Vui lòng thử lại sau`, {
-            position: 'top-right',
-            pauseOnHover: false,
-            theme: 'dark',
-          });
-        }
-      } catch (error) {
-        toast.error(`Vui lòng đăng nhập lại`, {
-          position: 'top-right',
-          pauseOnHover: false,
-          theme: 'dark',
-        });
-        console.error(error);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-  };
   const handleChooseAddress = (e) => {
     const itemss = e.target.value;
     const item: Address | undefined = addresses.find((address) => address.id === parseInt(itemss));
@@ -343,9 +307,9 @@ const CheckOut = () => {
     try {
       const res = await provinceApi.cityApi();
       if (res.status === 200) {
-        const newCity = res.data.map((city) => ({
-          code: city.code,
-          name: city.name,
+        const newCity = res?.data.results.map((city) => ({
+          code: city.province_id,
+          name: city.province_name,
         }));
         newCity.forEach((city) => {
           setCityMap((prevMapping) => ({
@@ -362,9 +326,9 @@ const CheckOut = () => {
     try {
       const res = await provinceApi.districtApi(id);
       if (res.status === 200) {
-        const newDistrict = res.data.districts.map((district) => ({
-          code: district.code,
-          name: district.name,
+        const newDistrict = res.data.results.map((district) => ({
+          code: district.district_id,
+          name: district.district_name,
         }));
         newDistrict.forEach((district) => {
           setDistrictMap((prevMapping) => ({
@@ -382,9 +346,9 @@ const CheckOut = () => {
       const res = await provinceApi.wardApi(id);
 
       if (res.status === 200) {
-        const newWards = res.data.wards.map((ward) => ({
-          code: ward.code,
-          name: ward.name,
+        const newWards = res.data.results.map((ward) => ({
+          code: ward.ward_id,
+          name: ward.ward_name,
         }));
         newWards.forEach((ward) => {
           setWardMap((prevMapping) => ({
@@ -425,6 +389,7 @@ const CheckOut = () => {
       theme: 'dark',
     });
   };
+  console.log('address:', user);
   return (
     <div className="flexbox check-out">
       {/* nút bấm mobile */}
@@ -689,8 +654,8 @@ const CheckOut = () => {
                           <td colSpan={2}>
                             <p>
                               Sau khi "Đặt hàng" thành công, DKing sẽ kiểm tra sản phẩm và đóng gói ngay để giao hàng
-                              cho bạn. Trong quá trình kiểm tra sản phẩm nếu có phát sinh DKing sẽ liên hệ trực tiếp
-                              với quý khách để xin xác nhận. DKing xin chân thành cảm ơn!
+                              cho bạn. Trong quá trình kiểm tra sản phẩm nếu có phát sinh DKing sẽ liên hệ trực tiếp với
+                              quý khách để xin xác nhận. DKing xin chân thành cảm ơn!
                             </p>
                           </td>
                         </tr>
@@ -715,9 +680,23 @@ const CheckOut = () => {
             <div className="main-content">
               <div className="step">
                 <div className="step-sections steps-onepage">
-                <Link style={{fontSize: '16px'}} className="btn-cart" to={path.cart} onClick={() => navigate(path.cart)}>
-                 Xem giỏ hàng
-                 <svg style={{marginLeft: "5px"}} width={20} height={20} fill='white' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M0 24C0 10.7 10.7 0 24 0H69.5c22 0 41.5 12.8 50.6 32h411c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3H170.7l5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5H488c13.3 0 24 10.7 24 24s-10.7 24-24 24H199.7c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5H24C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"/></svg>
+                  <Link
+                    style={{ fontSize: '16px' }}
+                    className="btn-cart"
+                    to={path.cart}
+                    onClick={() => navigate(path.cart)}
+                  >
+                    Xem giỏ hàng
+                    <svg
+                      style={{ marginLeft: '5px' }}
+                      width={20}
+                      height={20}
+                      fill="white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 576 512"
+                    >
+                      <path d="M0 24C0 10.7 10.7 0 24 0H69.5c22 0 41.5 12.8 50.6 32h411c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3H170.7l5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5H488c13.3 0 24 10.7 24 24s-10.7 24-24 24H199.7c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5H24C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z" />
+                    </svg>
                   </Link>
                   <div className="section">
                     <div className="section-header">
@@ -756,8 +735,7 @@ const CheckOut = () => {
                                 !!addresses.length &&
                                 addresses.map((item, i) => (
                                   <option value={item.id} key={i}>
-                                    {item.fullName},
-                                    {item.phone}, {item.addressDetail}, {wardMap[item.wards]},{' '}
+                                    {item.fullName},{item.phone}, {item.addressDetail}, {wardMap[item.wards]},{' '}
                                     {districtMap[item.district]}, {cityMap[item.province]}
                                   </option>
                                 ))}
@@ -966,10 +944,11 @@ const CheckOut = () => {
                             {bankTransfer && (
                               <div className="radio-wrapper content-box-row content-box-row-secondary">
                                 <div className="blank-slate">
-                                  Anh/Chị vui lòng chuyển khoản vào tài khoản sau đây: - Ngân hàng: VCB (Ngân hàng thương mại cổ phần Ngoại thương Việt Nam) - Tên tài khoản: NGUYEN VAN DAT - Số tài khoản:
-                                  1014435406 - Nội Dung Chuyển Khoản: Online ck + SĐT đặt hàng.
-                                  Chuyển khoản thành công Anh/Chị cho em xin ảnh chụp sao kê giao dịch và báo lại với
-                                  nhân viên qua zalo: 0965695182 khi xác nhận ạ
+                                  Anh/Chị vui lòng chuyển khoản vào tài khoản sau đây: - Ngân hàng: VCB (Ngân hàng
+                                  thương mại cổ phần Ngoại thương Việt Nam) - Tên tài khoản: NGUYEN VAN DAT - Số tài
+                                  khoản: 1014435406 - Nội Dung Chuyển Khoản: Online ck + SĐT đặt hàng. Chuyển khoản
+                                  thành công Anh/Chị cho em xin ảnh chụp sao kê giao dịch và báo lại với nhân viên qua
+                                  zalo: 0965695182 để xác nhận ạ
                                 </div>
                               </div>
                             )}
@@ -996,27 +975,6 @@ const CheckOut = () => {
                                 </div>
                               </label>
                             </div>
-                            <div className="radio-wrapper content-box-row" onClick={handleZaloPay}>
-                              <label className="radio-label" htmlFor="payment_method_id_zalo">
-                                <div className="radio-input payment-method-checkbox">
-                                  <input
-                                    id="payment_method_id_zalo"
-                                    className="input-radio"
-                                    name="payment_method_id"
-                                    type="radio"
-                                  />
-                                </div>
-                                <div className="radio-content-input">
-                                  <img className="main-img" src={Images.logoZaloPay} />
-                                  <div>
-                                    <span className="radio-label-primary">
-                                      ZaloPay - Thanh toán trong 2s - Ứng dụng thanh toán trực tuyến
-                                    </span>
-                                    <span className="quick-tagline hidden" />
-                                  </div>
-                                </div>
-                              </label>
-                            </div>
                           </div>
                         </div>
                       </div>
@@ -1025,17 +983,16 @@ const CheckOut = () => {
                 </div>
                 {/* nút bấm */}
                 <div className="d-flex align-items-center justify-content-around mt-5" id="step-footer-checkout">
-                  
                   <div>
                     <button type="submit" className="btn-checkout-done" onClick={handlePayOrder}>
-                      <span style={{fontSize: '18px'}}  className="btn-content">Hoàn tất đơn hàng</span>
+                      <span style={{ fontSize: '18px' }} className="btn-content">
+                        Hoàn tất đơn hàng
+                      </span>
                     </button>
                   </div>
-                  
                 </div>
               </div>
             </div>
-            
           </div>
         </div>
       </div>
